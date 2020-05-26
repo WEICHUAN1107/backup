@@ -1,0 +1,26 @@
+%YAML:1.0
+---
+calibration_time: "Fri Nov 16 17:20:49 2018"
+M1: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1.7215736255602019e+03, 0., 9.5142283506686488e+02, 0.,
+       1.7216221687447762e+03, 5.4579295151933786e+02, 0., 0., 1. ]
+D1: !!opencv-matrix
+   rows: 1
+   cols: 4
+   dt: d
+   data: [ -5.3167382009743092e-01, 2.6597682747876783e-01, 0., 0. ]
+xi1: 5.8462918615952641e-01
+
+orisize: [ 1920, 1080 ]
+recsize: [ 1920, 1080 ]
+
+Boarder: [10,10,10,10]
+
+SearchGrid: [16,9]
+camheight: 1000
+
+colgridN: 32
+rowgridN: 25

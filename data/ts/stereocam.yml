@@ -1,0 +1,29 @@
+%YAML:1.0
+---
+calibration_time: "Fri Nov 16 17:20:49 2018"
+M1: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1083.93872379456, 0., 966.1517760437040, 0.,
+       1094.09927819228, 557.949919552656, 0., 0., 1. ]
+D1: !!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [ -0.368753623829284, 0.128848930069817, -0.000290551005141540, 0.000694720857520177, -0.0205217363682479 ]
+xi1: 0
+
+orisize: [ 1920, 1080 ]
+recsize: [ 1920, 1080 ]
+cam_height: 1000
+colgridN: 32
+rowgridN: 25
+#recsize: [ 1000, 300 ]
+
+# Kundist: !!opencv-matrix
+#    rows: 3
+#    cols: 3
+#    dt: d
+#    data: [ 600, 0, 500, 0, 600, 300, 0, 0, 1 ]
+# recsize: [ 1000, 500 ]
