@@ -1,8 +1,5 @@
 #include "util.h"
 #include "vrprocess.h"
-#include "opencv2/ccalib/omnidir.hpp"
-
-
 
 
 VideoCapture cam;

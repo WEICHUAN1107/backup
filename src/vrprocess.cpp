@@ -3,7 +3,7 @@
 #include "camera.h"
 
 
-#define PANGOLIN
+// #define PANGOLIN
 
 #ifdef PANGOLIN
 #include "viewer.h"
@@ -225,9 +225,9 @@ int refreshviewer(void* handle)
 {
     VRP* vrp = (VRP*)handle;
     if(!vrp->isstart) { usleep(1000); return 1; }
-    if(!vrp->viewer) return -1;
 
     #ifdef PANGOLIN
+        if(!vrp->viewer) return -1;
         vector<Frame*> _allFrames;
         vrp->manager->getAllFrames(_allFrames);
         vector<MapPoint*> _allMapPoints;
