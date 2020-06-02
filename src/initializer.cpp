@@ -43,18 +43,18 @@ bool find_transform(Mat& K, vector<Point2f>& p1, vector<Point2f>& p2, vector<Map
     cout << "t.t(): " << t.t() << endl;
 
     // 先验知识：相机不会朝天看
-    // if(t.at<double>(2) < 0 && t.at<double>(1) < -0.1)
-    // {
-    //     cout << "not correct: y < -0.1" << endl;
-    //     return false;
-    // }
+    if(t.at<double>(2) < 0 && t.at<double>(1) < -0.1)
+    {
+        cout << "not correct: y < -0.1" << endl;
+        return false;
+    }
 
     // // 先验知识：相机主要是水平安装，因此会水平运动，不会竖直运动，所以运动方向与地面夹角不会大于45度
-    // if(fabs(t.at<double>(1)) > fabs(t.at<double>(2)))
-    // {
-    //     cout << "not correct: y > z" << endl;
-    //     return false;
-    // }
+    if(fabs(t.at<double>(1)) > fabs(t.at<double>(2)))
+    {
+        cout << "not correct: y > z" << endl;
+        return false;
+    }
 
     // 先验知识：相机不应该左右平移
     // if(fabs(t.at<double>(0)) > fabs(t.at<double>(2)))
@@ -106,7 +106,7 @@ bool Manager::initializeMap()
 
     if(refframe != NULL) // 像素移动距离够大了，初始化
     {
-        cout << "Trying to initialize..." << endl;
+        // cout << "Trying to initialize..." << endl;
         // 取得匹配点对
         vector<Point2f> p1, p2;
         vector<MapPoint*> commonmp;
@@ -158,7 +158,7 @@ bool Manager::initializeMap()
             }
             if(cnt < 10)
             {
-                cout << "too few good 3d pts." << endl;
+                // cout << "too few good 3d pts." << endl;
                 for(int i=0;i<commonmp.size();i++)
                     commonmp[i]->setpw(Point3d(0,0,0));
                 return false;
@@ -185,14 +185,14 @@ bool Manager::initializeMap()
             setVelocity(combineT(R,t));
 
             initialized = true;
-            cout << "Initialized!" << endl;
-            cout << "refframe->fid: " << refframe->fid << endl;
-            cout << "cf->fid: " << cf->fid << endl;
+            // cout << "Initialized!" << endl;
+            // cout << "refframe->fid: " << refframe->fid << endl;
+            // cout << "cf->fid: " << cf->fid << endl;
             return true;
         }
         else
         {
-            cout << "Initialize fail, retry..." << endl;
+            // cout << "Initialize fail, retry..." << endl;
         }
     }
     return false;

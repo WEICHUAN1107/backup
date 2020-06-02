@@ -163,8 +163,6 @@ Point2f FAST16(Mat img)
     return ret2;
 }
 
-
-
 void Manager::addOrRemovePoints()
 {
     int colN = colgridN;
@@ -245,10 +243,10 @@ void Manager::addOrRemovePoints()
                     if(/*boundary1.dot(Point3f(bestpt.x, bestpt.y, 1))>0 && boundary2.dot(Point3f(bestpt.x, bestpt.y, 1))>0 &&*/ bestpt.y<800 && bestpt.y>500)
                     {
                         mp->isOnGround = true;
-                        // if(!imgforshow.empty())
-                        // {
-                        //     circle(imgforshow, bestpt, 5, Scalar(0,0,200), -1);
-                        // }
+                        if(!imgforshow.empty())
+                        {
+                            circle(imgforshow, bestpt, 5, Scalar(0,0,200), -1);
+                        }
                     }
                     else if(!imgforshow.empty())
                     {

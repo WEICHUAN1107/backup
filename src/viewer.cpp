@@ -94,6 +94,7 @@ void Viewer::drawPoints(vector<Frame*>& frames, vector<MapPoint*>& mappoints)
         glBegin(GL_POINTS);
         glColor3f(mp->color[2]/255.0, mp->color[1]/255.0, mp->color[0]/255.0);
         glVertex3f(mp->getpw().x, mp->getpw().y, mp->getpw().z);
+        // std::cout << mp->getpw() << "\n";
         glEnd();
     }
 }
@@ -165,15 +166,6 @@ void Viewer::update(vector<Frame*>& frames, vector<MapPoint*>& mappoints, Mat vi
         pangolin::FinishFrame();
         return;
     }
-    // if(ground_param.size()<4)
-    // {
-    //     glBegin(GL_LINE_LOOP);
-    //     glColor3f(1.0f, 1.0f, 0.0f);
-    //     for(int i=0; i<5; ++i)
-    //     {
-
-    //     }
-    // }
 
     float A, B, C, D;
     if(ground_param[1]!=-1 && ground_param[2]!=-1)
@@ -198,11 +190,10 @@ void Viewer::update(vector<Frame*>& frames, vector<MapPoint*>& mappoints, Mat vi
             }
         }
     }
-    
 
     drawPoints(frames, mappoints);
 
-    drawTrack(frames, mappoints);
+    // drawTrack(frames, mappoints);
 
     // 更新相机视角
     if(frames.size()>1)

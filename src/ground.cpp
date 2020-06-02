@@ -3,7 +3,6 @@
 #include "point.h"
 #include "camera.h"
 
-
 using namespace std;
 using namespace cv;
 
@@ -157,14 +156,14 @@ bool Manager::updateGround()
             bestplane[2] *= -1;
             bestplane[3] *= -1;
         }
-        cout << "bestplane: " << bestplane[0] << " " << bestplane[1] << " " << bestplane[2] << " " << bestplane[3] << endl;
-        cout << "prevplane: " << ground_param[1+0] << " " << ground_param[1+1] << " " << ground_param[1+2] << " " << ground_param[1+3] << endl;
+        // cout << "bestplane: " << bestplane[0] << " " << bestplane[1] << " " << bestplane[2] << " " << bestplane[3] << endl;
+        // cout << "prevplane: " << ground_param[1+0] << " " << ground_param[1+1] << " " << ground_param[1+2] << " " << ground_param[1+3] << endl;
 
         history_plane.push_back(Vec4f(bestplane[0],bestplane[1],bestplane[2],bestplane[3]));
 
         Vec3f bestnorm(bestplane[0],bestplane[1],bestplane[2]);
         Vec3f groundnorm(ground_param[1],ground_param[2],ground_param[3]);
-        cout << "bestnorm.dot(groundnorm): " << bestnorm.dot(groundnorm) << endl << endl;
+        // cout << "bestnorm.dot(groundnorm): " << bestnorm.dot(groundnorm) << endl << endl;
         if(/*ground_param[2]==-1 && ground_param[1]==-1*/1)
         {
             ground_param[1] = bestplane[0];

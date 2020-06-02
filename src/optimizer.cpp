@@ -64,7 +64,7 @@ bool Manager::solvePnP(Mat& R, Mat& t)
 
     optimizer.setVerbose(false);
     optimizer.initializeOptimization();
-    optimizer.optimize(10);
+    optimizer.optimize(20);
 
     int Noutliers = 0;
     for(int i=0;i<edges.size();i++)
@@ -75,14 +75,14 @@ bool Manager::solvePnP(Mat& R, Mat& t)
             Noutliers++;
         }
     }
-    // if((float)Noutliers / edges.size() > 0.5)
-    // {
-    //     for(int i=0;i<edges.size();i++)
-    //         cout << edges[i]->chi2() << ", " << flush;
-    //     cout << endl;
-    //     delete cam;
-    //     return false; // 一半以上都是outliers 肯定有问题
-    // }
+    if((float)Noutliers / edges.size() > 0.5)
+    {
+        for(int i=0;i<edges.size();i++)
+            cout << edges[i]->chi2() << ", " << flush;
+        cout << endl;
+        delete cam;
+        return false; // 一半以上都是outliers 肯定有问题
+    }
 
     Mat Tcw;
     eigen2cv(Eigen::Isometry3d(pose->estimate()).matrix(), Tcw);

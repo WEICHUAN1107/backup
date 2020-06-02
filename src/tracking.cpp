@@ -51,14 +51,11 @@ bool Manager::tracking()
     if(!OK)
     {
         cout << "PnP fails. Track lost!" << endl;
-        // sleep(9999999999);
         return false;
     }
 
     return true;
 }
-
-
 
 vector<float> xs, ys;
 int goodcnt = 0;
@@ -116,9 +113,7 @@ void Manager::calcEndpt()
 
 int Manager::getRcv(uchar* _imgdata)
 {
-    // if(ground_param[0]==-1 && ground_param[1]==-1) return -1;
     if(ground_param[0] < 0) return -1;
-    // cout << "ground_param: " << ground_param[1+0] << " " << ground_param[1+1] << " " << ground_param[1+2] << " " << ground_param[1+3] << endl;
     Point3d r1;
     r1.x = ground_param[1];
     r1.y = ground_param[2];
@@ -127,10 +122,7 @@ int Manager::getRcv(uchar* _imgdata)
 
     Point3d r2 = pointMultiply(K.inv(), Point3d(vanishing_pt.x,vanishing_pt.y, 1));
     r2 /= norm(r2);
-    cout << "r1: " << ground_param[1] << " " << ground_param[2] << " " << ground_param[3] << " " << ground_param[4] << endl;
-    cout << "r1*r2: " << r1.dot(r2) << endl;
     if(fabs(r1.dot(r2))>0.017452406437283) return -1;
-    cout << "theta: " << 57.3*acos(r1.dot(r2)) << endl;
 
     Point3d r0 = r1.cross(r2);
     r0 /= norm(r0);
@@ -147,20 +139,10 @@ int Manager::getRcv(uchar* _imgdata)
     Rcv.at<double>(0,2) = r2.x;
     Rcv.at<double>(1,2) = r2.y;
     Rcv.at<double>(2,2) = r2.z;
-    cout << "\n\nRcv:\n" << Rcv << "\n\n\n";
     Point3d s3dc0 = pointMultiply(K*Rcv, Point3d(900,1000,2*5000)), e3dc0 = pointMultiply(K*Rcv, Point3d(-900,1000,2*5000));
     Point3d s3dc1 = pointMultiply(K*Rcv, Point3d(900,1000,2*4000)), e3dc1 = pointMultiply(K*Rcv, Point3d(-900,1000,2*4000));
     Point3d s3dc2 = pointMultiply(K*Rcv, Point3d(900,1000,2*3000)), e3dc2 = pointMultiply(K*Rcv, Point3d(-900,1000,2*3000));
     Point3d s3dc3 = pointMultiply(K*Rcv, Point3d(900,1000,2*2000)), e3dc3 = pointMultiply(K*Rcv, Point3d(-900,1000,2*2000));
-
-    // cout << "s3dc0: " << s3dc0 << "\n";
-    // cout << "e3dc0: " << e3dc0 << "\n";
-    // cout << "s3dc1: " << s3dc1 << "\n";
-    // cout << "e3dc1: " << e3dc1 << "\n";
-    // cout << "s3dc2: " << s3dc2 << "\n";
-    // cout << "e3dc2: " << e3dc2 << "\n";
-    // cout << "s3dc3: " << s3dc3 << "\n";
-    // cout << "e3dc3: " << e3dc3 << "\n";
 
     Point2f s2di0(s3dc0.x/s3dc0.z, s3dc0.y/s3dc0.z), e2di0(e3dc0.x/e3dc0.z, e3dc0.y/e3dc0.z);
     Point2f s2di1(s3dc1.x/s3dc1.z, s3dc1.y/s3dc1.z), e2di1(e3dc1.x/e3dc1.z, e3dc1.y/e3dc1.z);
@@ -175,17 +157,6 @@ int Manager::getRcv(uchar* _imgdata)
     e2di2 = camera->mydistortPoint(e2di2);
     s2di3 = camera->mydistortPoint(s2di3);
     e2di3 = camera->mydistortPoint(e2di3);
-
-
-    // cout << "s2di0: " << s2di0 << "\n";
-    // cout << "e2di0: " << e2di0 << "\n";
-    // cout << "s2di1: " << s2di1 << "\n";
-    // cout << "e2di1: " << e2di1 << "\n";
-    // cout << "s2di2: " << s2di2 << "\n";
-    // cout << "e2di2: " << e2di2 << "\n";
-    // cout << "s2di3: " << s2di3 << "\n";
-    // cout << "e2di3: " << e2di3 << "\n";
-
 
     Mat img_show(Size(1920,1080), CV_8UC1, _imgdata), top_view = Mat::zeros(1080, 1920, CV_8UC3);
     cvtColor(img_show, img_show, COLOR_GRAY2BGR);
@@ -210,44 +181,12 @@ int Manager::getRcv(uchar* _imgdata)
     {
         circle(img_show, pts_on_ground[i], 4, Scalar(0,200,0), -1);
     }
-
-    // for(int i=0; i<top_view.rows; ++i)
-    // {
-    //     for(int j=0; j<top_view.cols; ++j)
-    //     {
-    //         Point3d pt_3d = pointMultiply(R_top_ori, Point3d(j,i,1));
-    //         Point2d pt_2d = Point2d(pt_3d.x/pt_3d.z, pt_3d.y/pt_3d.z);
-    //         if((2<pt_2d.x&&pt_2d.x<top_view.cols-2) && 2<pt_2d.y&&pt_2d.y<top_view.rows-2)
-    //         {
-    //             Point pt0 = Point(cvFloor(pt_2d.x), cvFloor(pt_2d.y));
-    //             double x = 
-    //             top_view.at<Vec3b>(i, j)[0] = 
-    //         }
-    //     }
-    // }
-
-
-
-
-
-
+    
     imwrite("img_show.jpg", img_show);
     resize(img_show, img_show, Size(), 0.5, 0.5);
-    // while(1)
     {
         imshow("img_show",img_show);
-        waitKey();
+        waitKey(1);
     }
-cout << "line: " << __LINE__ << endl << endl;
-sleep(99999);
-exit(0);
-
     return 0;
 }
-
-
-
-
-
-
-

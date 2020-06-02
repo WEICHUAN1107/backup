@@ -2,8 +2,7 @@
 #include "vrprocess.h"
 #include "camera.h"
 
-
-// #define PANGOLIN
+#define PANGOLIN
 
 #ifdef PANGOLIN
 #include "viewer.h"
@@ -31,13 +30,11 @@ typedef struct
     mutex Mutexvrpinit, Mutexvrpstop, Mutexvrpstart;
 }VRP;
 
-
 void* vrp_inithandle()
 {
     VRP* handle = new VRP();
     return (void*)handle;
 }
-
 
 int vrp_releasehandle(void* handle)
 {
@@ -46,7 +43,6 @@ int vrp_releasehandle(void* handle)
     delete vrp;
     return 0;
 }
-
 
 int vrp_init(void* handle, float _Komni[9], float _D[4], float _xi, int _oriw, int _orih, float _KNew[9], int _neww, int _newh,
             int _safeborder[4], int _colgridN, int _rowgridN, bool _useviewer, float height)
@@ -90,7 +86,6 @@ int vrp_init(void* handle, float _Komni[9], float _D[4], float _xi, int _oriw, i
     #endif
     return 0;
 }
-
 
 int vrp_start(void* handle)
 {
@@ -156,25 +151,18 @@ int vrp_doprocess(void* handle, uchar* _imgdata, long long _timestamp)
     else
     {
         bool OK = vrp->manager->tracking();
-        if(!OK) // lost
+        if(!OK)
         {
             cout << "tracking lost!\n" << vrp->manager->log.str() << endl;
             while(vrp->doBA) usleep(1000);
             return -2;
         }
 
-        // cout << "vrp->manager->vanishing_founded: " << vrp->manager->vanishing_founded << endl;
-        if(vrp->manager->vanishing_founded == false)
-        {
-            vrp->manager->calcEndpt();
-        }
-        else
-        {
-            vrp->manager->getRcv(_imgdata);
-        }
+        if(vrp->manager->vanishing_founded == false) vrp->manager->calcEndpt();
+        else vrp->manager->getRcv(_imgdata);
 
-        vrp->manager->recoverRecentLostPts();
-        vrp->manager->updateGround();
+        // vrp->manager->recoverRecentLostPts();
+        // vrp->manager->updateGround();
         if(vrp->manager->makeKF()) // KF
         {
             bool donelastBA = false;
@@ -190,11 +178,10 @@ int vrp_doprocess(void* handle, uchar* _imgdata, long long _timestamp)
 
             while(!donelastBA)
                 usleep(100);
-            // vrp->manager->updateGround();
+            vrp->manager->updateGround();
         }
         // vrp->manager->updateGround();
     }
-
     // printf("%s\n", vrp->manager->log.str().c_str());
     return 0;
 }

@@ -6,24 +6,14 @@ VideoCapture cam;
 Mat img;
 vector<int> orisize;
 void* handle = 0;
-int state = 1; // 0:stop 1:run 2:pause 3:halt
 bool lost = false;
-bool requestStop = false;
-bool requestStopRespond1 = false;
-bool requestStopRespond2 = false;
-bool requestStopRespond3 = false;
-bool fetchimg = true;
-bool singlestep = false;
 bool useviewer = true;
-int totalframe = 1;
-
-
 
 void init(string parampath, string datapath, int startframe = 0)
 {
     Mat Komni, D, Kundist;
     double xi;
-    vector<int> recsize, safeborder(4); // up down left right in px
+    vector<int> recsize, safeborder(4);
     int colgridN=16, rowgridN=9;
     float cam_height;
 
@@ -34,7 +24,6 @@ void init(string parampath, string datapath, int startframe = 0)
     fs["D1"] >> D;
     fs["xi1"] >> xi;
 
-    // fs["camera_matrix_undist"] >> Kundist;
     if(Kundist.empty()) Komni.copyTo(Kundist);
     fs["orisize"] >> orisize;
     fs["recsize"] >> recsize;
@@ -48,7 +37,6 @@ void init(string parampath, string datapath, int startframe = 0)
         safeborder[3] = 10;
         cout << "   warning: missing safeborder, the default value will be used" << endl;
     }
-    // fs["useviewer"] >> useviewer;
     fs["colgridN"] >> colgridN;
     fs["rowgridN"] >> rowgridN;
     fs.release();
@@ -98,7 +86,6 @@ void init(string parampath, string datapath, int startframe = 0)
     else
     {
         cout << "Open imagepath fail!" << endl;
-        // exit(0);
     }
 
     handle = _handle;
@@ -106,25 +93,13 @@ void init(string parampath, string datapath, int startframe = 0)
 
 int main(int argc, char* argv[])
 {
-
     if(argc == 3)
     {
         init(argv[1], argv[2]);
-        singlestep = false;
-    }
-    else if(argc == 4 && argv[3][0]=='-' && argv[3][1]=='d')
-    {
-        init(argv[1], argv[2]);
-        singlestep = true;
-    }
-    else if(argc == 4)
-    {
-        init(argv[1], argv[2], atoi(argv[3]));
-        singlestep = false;
     }
     else
     {
-        cout << "Usage:\n./testvrp path_to_yml path_to_video [-d or startframe]" << endl;
+        cout << "Usage:\n./testvrp path_to_yml path_to_video" << endl;
         exit(0);
     }
 
@@ -134,7 +109,6 @@ int main(int argc, char* argv[])
         while(1)
         {
             if(vrp_bundle(handle) == -1) lost = true;
-            if(singlestep) usleep(10000);
         }
     });
     BAthread.detach();
@@ -146,23 +120,23 @@ int main(int argc, char* argv[])
         {
             Mat imggray = Mat::ones(orisize[1], orisize[0], CV_8UC1);
             if(img.channels() == 3) cvtColor(img, img, COLOR_BGR2GRAY);
-            // else imggray = img.clone();
 
-            // img(Rect(0,200,orisize[0], 600)).copyTo(imggray(Rect(0,200,orisize[0],600)));
             img(Rect(0,0,orisize[0], orisize[1])).copyTo(imggray);
             int ret = vrp_doprocess(handle, imggray.data, 0);
-            totalframe++;
             if(ret == -2)
             {
                 cout << "restart\n";
                 vrp_restart(handle);
                 lost = true;
             }
+            else if(ret == 10)
+            {
+                std::cout << "calibrate ground done\n";
+                vrp_stop(handle);
+            }
         }
         else
         {
-            fetchimg = true;
-            state = 3;
             cout << "Done!" << endl;
         }
 

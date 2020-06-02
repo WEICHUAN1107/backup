@@ -7,35 +7,8 @@
 using namespace std;
 using namespace cv;
 
-
-// 将img最上沿的中点放到showboard的x,y处，并旋转degree度
-void stitchImage(Mat &showboard, Mat &img, double x, double y, double degree)
-{
-    Mat tmp;
-    double w = sqrt(img.cols*img.cols/4.0 + img.rows*img.rows);
-    Mat M = getRotationMatrix2D(Point2f(img.cols/2.0, 0), degree, 1);
-    M.at<double>(0, 2) += w - img.cols/2.0;
-    M.at<double>(1, 2) += w;
-    warpAffine(img, tmp, M, Size(w*2,w*2), INTER_NEAREST, BORDER_CONSTANT, 0);
-
-    if(x-w>showboard.cols || y-w>showboard.rows || x+w<0 || y+w<0) return; // 不在画面内
-
-    int sx = x-w < 0 ? 0 : x-w; // showboard的左上角坐标
-    int sy = y-w < 0 ? 0 : y-w;
-    int ww = x-w < 0 ? w+x : ( x+w > showboard.cols ? w+showboard.cols-x : w*2); // 重叠区域的长宽
-    int hh = y-w < 0 ? w+y : ( y+w > showboard.rows ? w+showboard.rows-y : w*2);
-    int tx = x-w < 0 ? w-x : 0; // img左上角坐标
-    int ty = y-w < 0 ? w-y : 0;
-    Mat roi = showboard(Rect(sx, sy, ww, hh));
-    // Mat showboardbefore = showboard.clone();
-    tmp(Rect(tx, ty, ww, hh)).copyTo(roi, tmp(Rect(tx, ty, ww, hh))); // 把tmp自身当做mask，黑色部分不覆盖
-    // showboard = max(showboard, showboardbefore);
-    // showboard = showboard*0.04 + showboardbefore*0.96;
-}
-
 bool Manager::updateGround()
 {
-    // 只在关键帧计算地面
     // if(cf->isKF())
     {
         default_random_engine e(time(0));
