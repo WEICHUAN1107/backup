@@ -113,6 +113,8 @@ int main(int argc, char* argv[])
     });
     BAthread.detach();
 
+    cv::Mat R_cam_vec;
+
     while(1)
     {
         cam >> img;
@@ -131,8 +133,11 @@ int main(int argc, char* argv[])
             }
             else if(ret == 10)
             {
+                R_cam_vec = vrp_getRcv(handle);
+                std::cout << "\n\n\nR_cam_vec:\n" << R_cam_vec << "\n\n";
                 std::cout << "calibrate ground done\n";
                 vrp_stop(handle);
+                break;
             }
         }
         else
@@ -146,4 +151,5 @@ int main(int argc, char* argv[])
         }
         usleep(100);
     }
+    return 0;
 }

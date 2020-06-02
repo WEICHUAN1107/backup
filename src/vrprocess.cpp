@@ -2,7 +2,7 @@
 #include "vrprocess.h"
 #include "camera.h"
 
-#define PANGOLIN
+// #define PANGOLIN
 
 #ifdef PANGOLIN
 #include "viewer.h"
@@ -158,8 +158,9 @@ int vrp_doprocess(void* handle, uchar* _imgdata, long long _timestamp)
             return -2;
         }
 
+
         if(vrp->manager->vanishing_founded == false) vrp->manager->calcEndpt();
-        else vrp->manager->getRcv(_imgdata);
+        else if(vrp->manager->computeRcv(_imgdata) == 10) return 10;
 
         // vrp->manager->recoverRecentLostPts();
         // vrp->manager->updateGround();
@@ -242,4 +243,10 @@ void vrp_restart(void* handle)
     vrp->manager = new Manager(vrp->camera, vrp->safeborder, vrp->colgridN, vrp->rowgridN, vrp->cam_height);
     vrp->doBA = false;
     vrp->isstart = true;
+}
+
+cv::Mat vrp_getRcv(void* handle)
+{
+    VRP* vrp = (VRP*)handle;
+    return vrp->manager->getRcv();
 }

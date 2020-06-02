@@ -24,7 +24,7 @@ public:
     bool solvePnP(Mat& R, Mat& t);
 
     void calcEndpt();
-    int getRcv(uchar* _imgdata);
+    int computeRcv(uchar* _imgdata);
 
     
 
@@ -137,11 +137,15 @@ public:
         return ground_param;
     }
 
+    Mat getRcv();
+
     bool initialized;
     stringstream log;
     bool vanishing_founded;
 
     Point3f boundary1, boundary2;
+
+    Mat R_cam_vec;
 
 private:
 

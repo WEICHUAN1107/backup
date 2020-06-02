@@ -111,7 +111,7 @@ void Manager::calcEndpt()
     }
 }
 
-int Manager::getRcv(uchar* _imgdata)
+int Manager::computeRcv(uchar* _imgdata)
 {
     if(ground_param[0] < 0) return -1;
     Point3d r1;
@@ -139,6 +139,7 @@ int Manager::getRcv(uchar* _imgdata)
     Rcv.at<double>(0,2) = r2.x;
     Rcv.at<double>(1,2) = r2.y;
     Rcv.at<double>(2,2) = r2.z;
+    R_cam_vec = Rcv;
     Point3d s3dc0 = pointMultiply(K*Rcv, Point3d(900,1000,2*5000)), e3dc0 = pointMultiply(K*Rcv, Point3d(-900,1000,2*5000));
     Point3d s3dc1 = pointMultiply(K*Rcv, Point3d(900,1000,2*4000)), e3dc1 = pointMultiply(K*Rcv, Point3d(-900,1000,2*4000));
     Point3d s3dc2 = pointMultiply(K*Rcv, Point3d(900,1000,2*3000)), e3dc2 = pointMultiply(K*Rcv, Point3d(-900,1000,2*3000));
@@ -183,10 +184,15 @@ int Manager::getRcv(uchar* _imgdata)
     }
     
     imwrite("img_show.jpg", img_show);
-    resize(img_show, img_show, Size(), 0.5, 0.5);
-    {
-        imshow("img_show",img_show);
-        waitKey(1);
-    }
-    return 0;
+    // resize(img_show, img_show, Size(), 0.5, 0.5);
+    // {
+    //     imshow("img_show",img_show);
+    //     waitKey(1);
+    // }
+    return 10;
+}
+
+Mat Manager::getRcv()
+{
+    return R_cam_vec;
 }

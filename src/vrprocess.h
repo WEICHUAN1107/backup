@@ -20,6 +20,8 @@ int refreshviewer(void* handle);
 
 void vrp_restart(void* handle);
 
+cv::Mat vrp_getRcv(void* handle);
+
 
 #endif
 
